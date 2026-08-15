@@ -5,121 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buat Event Baru</title>
   <link rel="stylesheet" href="css/style.css">
-  <style>
-    /* Animasi untuk toast */
-    @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-    
-    @keyframes slideOut {
-      from {
-        transform: translateX(0);
-        opacity: 1;
-      }
-      to {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-    }
-    
-    /* Style tambahan untuk validasi */
-    .form-group input:invalid,
-    .form-group select:invalid {
-      border-color: #ff4444;
-    }
-    
-    .form-group input:valid,
-    .form-group select:valid {
-      border-color: #4CAF50;
-    }
-  </style>
 </head>
 <body>
 
   <div class="form-card">
-    <div class="form-header">
-      <h2>🎪 Buat Event Baru</h2>
-      <p class="subtitle">Lengkapi form di bawah untuk membuat event baru</p>
-    </div>
-    
-    <form id="eventForm" novalidate>
+    <h2>Form Buat Event</h2>
+    <form id="eventForm">
       <div class="form-group">
-        <label for="eventName">📝 Nama Event</label>
-        <input 
-          type="text" 
-          id="eventName" 
-          placeholder="Contoh: Turnamen Futsal 2026" 
-          minlength="3"
-          required
-        >
-        <small class="error-message">Nama event minimal 3 karakter</small>
+        <label for="eventName">Nama Event</label>
+        <input type="text" id="eventName" placeholder="Contoh: Turnamen Futsal 2026" required>
       </div>
-      
       <div class="form-group">
-        <label for="eventOrganizer">👥 Nama Penyelenggara</label>
-        <input 
-          type="text" 
-          id="eventOrganizer" 
-          placeholder="Contoh: Panitia Pelaksana" 
-          required
-        >
-        <small class="error-message">Nama penyelenggara wajib diisi</small>
+        <label for="eventOrganizer">Nama Penyelenggara</label>
+        <input type="text" id="eventOrganizer" placeholder="Contoh: Panitia Pelaksana" required>
       </div>
-      
       <div class="form-group">
-        <label for="eventLocation">📍 Lokasi Event</label>
-        <input 
-          type="text" 
-          id="eventLocation" 
-          placeholder="Contoh: GOR Samarinda" 
-          required
-        >
-        <small class="error-message">Lokasi event wajib diisi</small>
+        <label for="eventLocation">Lokasi Event</label>
+        <input type="text" id="eventLocation" placeholder="Contoh: GOR Samarinda" required>
       </div>
-      
       <div class="form-group">
-        <label for="eventCategory">🏷️ Kategori Event</label>
+        <label for="eventCategory">Kategori Event</label>
         <select id="eventCategory" required>
           <option value="">-- Pilih Kategori --</option>
-          <option value="sport">🏆 Olahraga (Sport)</option>
-          <option value="music">🎵 Musik & Konser</option>
+          <option value="sport">Olahraga (Sport)</option>
+          <option value="music">Musik & Konser</option>
         </select>
-        <small class="error-message">Kategori event wajib dipilih</small>
       </div>
 
       <!-- Field tersembunyi untuk Olahraga -->
       <div class="form-group hidden" id="sportCompetitionGroup">
-        <label for="sportType">🎯 Cabang Olahraga</label>
+        <label for="sportType">Cabang Olahraga</label>
         <select id="sportType">
           <option value="">-- Pilih Cabang --</option>
         </select>
       </div>
-      
       <div class="form-group hidden" id="sportSubCategoryGroup">
-        <label for="sportSubCategory">👥 Divisi / Nomor</label>
+        <label for="sportSubCategory">Divisi / Nomor</label>
         <select id="sportSubCategory">
           <option value="">-- Pilih Divisi --</option>
         </select>
       </div>
-      
       <div class="form-group hidden" id="sportFormatGroup">
-        <label for="sportFormat">📊 Format Pertandingan</label>
+        <label for="sportFormat">Format Pertandingan</label>
         <select id="sportFormat">
           <option value="">-- Pilih Format --</option>
         </select>
       </div>
 
-      <button type="submit" class="btn-submit">
-        💾 Simpan & Lanjutkan
-      </button>
+      <button type="submit" class="btn-submit" id="submitBtn">Simpan & Lanjutkan</button>
     </form>
+    
+    <!-- Debug info -->
+    <div id="debugInfo" style="display:none; margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 5px; font-size: 12px;"></div>
   </div>
 
   <script type="module" src="js/main.js"></script>
