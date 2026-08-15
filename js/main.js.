@@ -1,75 +1,138 @@
-import { sportsConfig } from '../events/sports/sports-data.js';
+// Data untuk dropdown olahraga
+const sportData = {
+  "Sepak Bola": {
+    divisions: ["U-17", "U-23", "Umum"],
+    formats: ["7 vs 7", "9 vs 9", "11 vs 11"]
+  },
+  "Futsal": {
+    divisions: ["U-17", "U-23", "Umum"],
+    formats: ["5 vs 5"]
+  },
+  "Basket": {
+    divisions: ["Putra", "Putri", "Campuran"],
+    formats: ["3x3", "5x5"]
+  },
+  "Badminton": {
+    divisions: ["Tunggal Putra", "Tunggal Putri", "Ganda Putra", "Ganda Putri", "Ganda Campuran"],
+    formats: ["Set 21 poin", "Set 15 poin", "Best of 3"]
+  },
+  "Voli": {
+    divisions: ["Putra", "Putri"],
+    formats: ["Indoor", "Pantai"]
+  }
+};
 
-document.addEventListener('DOMContentLoaded', () => {
-  const categorySelect = document.getElementById('eventCategory');
-  const sportGroup = document.getElementById('sportCompetitionGroup');
-  const sportSelect = document.getElementById('sportType');
-  const subCategoryGroup = document.getElementById('sportSubCategoryGroup');
-  const subCategorySelect = document.getElementById('sportSubCategory');
-  const formatGroup = document.getElementById('sportFormatGroup');
-  const formatSelect = document.getElementById('sportFormat');
-  const eventForm = document.getElementById('eventForm');
+// Elemen DOM
+const categorySelect = document.getElementById('eventCategory');
+const sportTypeSelect = document.getElementById('sportType');
+const sportSubCategorySelect = document.getElementById('sportSubCategory');
+const sportFormatSelect = document.getElementById('sportFormat');
+const sportGroups = [
+  document.getElementById('sportCompetitionGroup'),
+  document.getElementById('sportSubCategoryGroup'),
+  document.getElementById('sportFormatGroup')
+];
 
-  categorySelect.addEventListener('change', (e) => {
-    if (e.target.value === 'sport') {
-      sportSelect.innerHTML = '<option value="">-- Pilih Olahraga --</option>';
-      Object.keys(sportsConfig).forEach(key => {
-        const opt = document.createElement('option');
-        opt.value = key;
-        opt.textContent = sportsConfig[key].name;
-        sportSelect.appendChild(opt);
-      });
-      sportGroup.classList.remove('hidden');
+// Fungsi untuk menampilkan/menyembunyikan field olahraga
+function toggleSportFields(show) {
+  sportGroups.forEach(group => {
+    if (show) {
+      group.classList.remove('hidden');
     } else {
-      sportGroup.classList.add('hidden');
-      subCategoryGroup.classList.add('hidden');
-      formatGroup.classList.add('hidden');
+      group.classList.add('hidden');
     }
   });
+  
+  if (!show) {
+    // Reset dropdown olahraga
+    sportTypeSelect.innerHTML = '';
+    sportSubCategorySelect.innerHTML = '';
+    sportFormatSelect.innerHTML = '';
+  }
+}
 
-  sportSelect.addEventListener('change', (e) => {
-    const sport = sportsConfig[e.target.value];
-    if (sport) {
-      subCategorySelect.innerHTML = '<option value="">-- Pilih Divisi --</option>';
-      sport.subCategories.forEach(item => {
-        const opt = document.createElement('option');
-        opt.value = item;
-        opt.textContent = item;
-        subCategorySelect.appendChild(opt);
-      });
-      subCategoryGroup.classList.remove('hidden');
-
-      formatSelect.innerHTML = '<option value="">-- Pilih Format --</option>';
-      sport.formats.forEach(item => {
-        const opt = document.createElement('option');
-        opt.value = item;
-        opt.textContent = item;
-        formatSelect.appendChild(opt);
-      });
-      formatGroup.classList.remove('hidden');
-    }
+// Fungsi untuk mengisi dropdown cabang olahraga
+function populateSportTypes() {
+  sportTypeSelect.innerHTML = '<option value="">-- Pilih Cabang --</option>';
+  Object.keys(sportData).forEach(sport => {
+    const option = document.createElement('option');
+    option.value = sport;
+    option.textContent = sport;
+    sportTypeSelect.appendChild(option);
   });
+  
+  // Reset dropdown divisi dan format
+  sportSubCategorySelect.innerHTML = '<option value="">-- Pilih Divisi --</option>';
+  sportFormatSelect.innerHTML = '<option value="">-- Pilih Format --</option>';
+}
 
-  eventForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const eventPayload = {
-      eventName: document.getElementById('eventName').value,
-      category: categorySelect.value,
-      sportDetails: categorySelect.value === 'sport' ? {
-        type: sportsConfig[sportSelect.value].name,
-        division: subCategorySelect.value,
-        format: formatSelect.value
-      } : null
-    };
-    
-    localStorage.setItem('activeEvent', JSON.stringify(eventPayload));
-    
-    // Path relatif, tidak perlu garis miring di depan
-    if (categorySelect.value === 'sport') {
-      window.location.href = 'events/sports/bracket.html';
-    } else {
-      alert("Event disimpan!");
-    }
-  });
+// Fungsi untuk mengisi dropdown divisi berdasarkan cabang
+function populateDivisions(sport) {
+  sportSubCategorySelect.innerHTML = '<option value="">-- Pilih Divisi --</option>';
+  
+  if (sport && sportData[sport]) {
+    sportData[sport].divisions.forEach(division => {
+      const option = document.createElement('option');
+      option.value = division;
+      option.textContent = division;
+      sportSubCategorySelect.appendChild(option);
+    });
+  }
+}
+
+// Fungsi untuk mengisi dropdown format berdasarkan cabang
+function populateFormats(sport) {
+  sportFormatSelect.innerHTML = '<option value="">-- Pilih Format --</option>';
+  
+  if (sport && sportData[sport]) {
+    sportData[sport].formats.forEach(format => {
+      const option = document.createElement('option');
+      option.value = format;
+      option.textContent = format;
+      sportFormatSelect.appendChild(option);
+    });
+  }
+}
+
+// Event listener untuk kategori
+categorySelect.addEventListener('change', function() {
+  if (this.value === 'sport') {
+    toggleSportFields(true);
+    populateSportTypes();
+  } else {
+    toggleSportFields(false);
+  }
 });
 
+// Event listener untuk cabang olahraga
+sportTypeSelect.addEventListener('change', function() {
+  populateDivisions(this.value);
+  populateFormats(this.value);
+});
+
+// Event listener untuk form submission
+document.getElementById('eventForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const formData = {
+    eventName: document.getElementById('eventName').value,
+    eventOrganizer: document.getElementById('eventOrganizer').value,
+    eventLocation: document.getElementById('eventLocation').value,
+    eventCategory: categorySelect.value,
+  };
+  
+  // Tambahkan data olahraga jika kategori sport
+  if (categorySelect.value === 'sport') {
+    formData.sportType = sportTypeSelect.value;
+    formData.sportSubCategory = sportSubCategorySelect.value;
+    formData.sportFormat = sportFormatSelect.value;
+  }
+  
+  // Tampilkan data (bisa diganti dengan API call)
+  console.log('Data Event:', formData);
+  alert('Event berhasil disimpan!');
+  
+  // Reset form (opsional)
+  // this.reset();
+  // toggleSportFields(false);
+});
