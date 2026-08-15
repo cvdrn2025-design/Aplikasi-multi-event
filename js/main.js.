@@ -1,7 +1,9 @@
-// Jalur keluar folder js (./../) -> masuk ke events/sports/sports-data.js
 import { sportsConfig } from './../events/sports/sports-data.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+  // TEST 1: Cek apakah JS berhasil dimuat
+  console.log("JavaScript main.js berhasil dimuat!");
+
   const categorySelect = document.getElementById('eventCategory');
   const sportGroup = document.getElementById('sportCompetitionGroup');
   const sportSelect = document.getElementById('sportType');
@@ -25,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target.value === 'sport') {
       loadSportsOptions();
       sportGroup.classList.remove('hidden');
-      sportSelect.setAttribute('required', 'true');
     } else {
       resetSportInputs();
     }
@@ -44,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
         subCategorySelect.appendChild(opt);
       });
       subCategoryGroup.classList.remove('hidden');
-      subCategorySelect.setAttribute('required', 'true');
 
       formatSelect.innerHTML = '<option value="">-- Pilih Format --</option>';
       sport.formats.forEach(item => {
@@ -54,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
         formatSelect.appendChild(opt);
       });
       formatGroup.classList.remove('hidden');
-      formatSelect.setAttribute('required', 'true');
     } else {
       subCategoryGroup.classList.add('hidden');
       formatGroup.classList.add('hidden');
@@ -65,22 +64,23 @@ document.addEventListener('DOMContentLoaded', () => {
     sportGroup.classList.add('hidden');
     subCategoryGroup.classList.add('hidden');
     formatGroup.classList.add('hidden');
-    sportSelect.removeAttribute('required');
-    subCategorySelect.removeAttribute('required');
-    formatSelect.removeAttribute('required');
   }
 
+  // TEST 2: Cek saat tombol diklik
   eventForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const category = categorySelect.value;
     
+    // Munculkan pop-up tes
+    alert("Tombol Simpan Berhasil Diklik!");
+
+    const category = categorySelect.value;
     const eventPayload = {
       eventName: document.getElementById('eventName').value,
       organizer: document.getElementById('eventOrganizer').value,
       location: document.getElementById('eventLocation').value,
       category: category,
       sportDetails: category === 'sport' ? {
-        type: sportsConfig[sportSelect.value].name,
+        type: sportsConfig[sportSelect.value] ? sportsConfig[sportSelect.value].name : sportSelect.value,
         division: subCategorySelect.value,
         format: formatSelect.value
       } : null
@@ -89,11 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('activeEvent', JSON.stringify(eventPayload));
 
     if (category === 'sport') {
-      // Menggunakan relative path ke sub-direktori
+      // Mengarahkan ke halaman bracket
       window.location.href = './events/sports/bracket.html';
     } else {
       alert(`Event "${eventPayload.eventName}" berhasil disimpan!`);
     }
   });
 });
-
