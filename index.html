@@ -4,61 +4,501 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buat Event Baru</title>
-  <link rel="stylesheet" href="css/style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      margin: 0;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      padding: 24px;
+      width: 100%;
+      max-width: 500px;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 8px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 16px; /* Penting untuk HP agar tidak zoom */
+      transition: all 0.3s;
+      background: #fafafa;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      background: white;
+    }
+
+    input::placeholder {
+      color: #aaa;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      padding-right: 40px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .btn-submit:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 1000;
+      animation: fadeInOut 3s ease;
+      text-align: center;
+      max-width: 90%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes fadeInOut {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+      }
+      15% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+      85% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+      }
+    }
+
+    /* Responsive untuk layar kecil */
+    @media (max-width: 360px) {
+      .form-card {
+        padding: 16px;
+      }
+      
+      h2 {
+        font-size: 20px;
+      }
+      
+      input, select {
+        padding: 12px;
+        font-size: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
 
   <div class="form-card">
-    <h2>Form Buat Event</h2>
+    <h2>🎪 Buat Event Baru</h2>
+    <p class="subtitle">Lengkapi form di bawah ini</p>
+    
     <form id="eventForm">
       <div class="form-group">
-        <label for="eventName">Nama Event</label>
-        <input type="text" id="eventName" placeholder="Contoh: Turnamen Futsal 2026" required>
+        <label for="eventName">📝 Nama Event</label>
+        <input 
+          type="text" 
+          id="eventName" 
+          placeholder="Contoh: Turnamen Futsal 2026" 
+          required
+        >
       </div>
+      
       <div class="form-group">
-        <label for="eventOrganizer">Nama Penyelenggara</label>
-        <input type="text" id="eventOrganizer" placeholder="Contoh: Panitia Pelaksana" required>
+        <label for="eventOrganizer">👥 Nama Penyelenggara</label>
+        <input 
+          type="text" 
+          id="eventOrganizer" 
+          placeholder="Contoh: Panitia Pelaksana" 
+          required
+        >
       </div>
+      
       <div class="form-group">
-        <label for="eventLocation">Lokasi Event</label>
-        <input type="text" id="eventLocation" placeholder="Contoh: GOR Samarinda" required>
+        <label for="eventLocation">📍 Lokasi Event</label>
+        <input 
+          type="text" 
+          id="eventLocation" 
+          placeholder="Contoh: GOR Samarinda" 
+          required
+        >
       </div>
+      
       <div class="form-group">
-        <label for="eventCategory">Kategori Event</label>
+        <label for="eventCategory">🏷️ Kategori Event</label>
         <select id="eventCategory" required>
           <option value="">-- Pilih Kategori --</option>
-          <option value="sport">Olahraga (Sport)</option>
-          <option value="music">Musik & Konser</option>
+          <option value="sport">🏆 Olahraga (Sport)</option>
+          <option value="music">🎵 Musik & Konser</option>
         </select>
       </div>
 
       <!-- Field tersembunyi untuk Olahraga -->
       <div class="form-group hidden" id="sportCompetitionGroup">
-        <label for="sportType">Cabang Olahraga</label>
+        <label for="sportType">🎯 Cabang Olahraga</label>
         <select id="sportType">
           <option value="">-- Pilih Cabang --</option>
         </select>
       </div>
+      
       <div class="form-group hidden" id="sportSubCategoryGroup">
-        <label for="sportSubCategory">Divisi / Nomor</label>
+        <label for="sportSubCategory">👥 Divisi / Nomor</label>
         <select id="sportSubCategory">
           <option value="">-- Pilih Divisi --</option>
         </select>
       </div>
+      
       <div class="form-group hidden" id="sportFormatGroup">
-        <label for="sportFormat">Format Pertandingan</label>
+        <label for="sportFormat">📊 Format Pertandingan</label>
         <select id="sportFormat">
           <option value="">-- Pilih Format --</option>
         </select>
       </div>
 
-      <button type="submit" class="btn-submit" id="submitBtn">Simpan & Lanjutkan</button>
+      <button type="submit" class="btn-submit" id="submitBtn">
+        💾 Simpan & Lanjutkan
+      </button>
     </form>
-    
-    <!-- Debug info -->
-    <div id="debugInfo" style="display:none; margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 5px; font-size: 12px;"></div>
   </div>
 
-  <script type="module" src="js/main.js"></script>
+  <script>
+    // Data olahraga
+    const sportsConfig = {
+      football: {
+        name: "Sepak Bola / Futsal",
+        formats: ["Single Elimination", "Setengah Kompetisi"],
+        subCategories: ["Futsal Putra", "Futsal Putri"]
+      },
+      basketball: {
+        name: "Bola Basket",
+        formats: ["Single Elimination", "Double Elimination"],
+        subCategories: ["3x3", "5v5"]
+      }
+    };
+
+    // Tunggu sampai halaman dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('✅ Halaman berhasil dimuat');
+      
+      // Ambil semua elemen
+      const form = document.getElementById('eventForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const categorySelect = document.getElementById('eventCategory');
+      const sportCompetitionGroup = document.getElementById('sportCompetitionGroup');
+      const sportSubCategoryGroup = document.getElementById('sportSubCategoryGroup');
+      const sportFormatGroup = document.getElementById('sportFormatGroup');
+      const sportTypeSelect = document.getElementById('sportType');
+      const sportSubCategorySelect = document.getElementById('sportSubCategory');
+      const sportFormatSelect = document.getElementById('sportFormat');
+      
+      // Fungsi toast notification
+      function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        // Hapus toast setelah 3 detik
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+      }
+      
+      // Fungsi untuk toggle field olahraga
+      function toggleSportFields(show) {
+        console.log('Toggle sport fields:', show);
+        
+        if (show) {
+          sportCompetitionGroup.classList.remove('hidden');
+          sportSubCategoryGroup.classList.remove('hidden');
+          sportFormatGroup.classList.remove('hidden');
+          populateSportTypes();
+        } else {
+          sportCompetitionGroup.classList.add('hidden');
+          sportSubCategoryGroup.classList.add('hidden');
+          sportFormatGroup.classList.add('hidden');
+          
+          // Reset dropdowns
+          sportTypeSelect.innerHTML = '<option value="">-- Pilih Cabang --</option>';
+          sportSubCategorySelect.innerHTML = '<option value="">-- Pilih Divisi --</option>';
+          sportFormatSelect.innerHTML = '<option value="">-- Pilih Format --</option>';
+        }
+      }
+      
+      // Fungsi untuk mengisi dropdown cabang olahraga
+      function populateSportTypes() {
+        console.log('Mengisi cabang olahraga...');
+        
+        sportTypeSelect.innerHTML = '<option value="">-- Pilih Cabang --</option>';
+        
+        Object.entries(sportsConfig).forEach(([key, value]) => {
+          const option = document.createElement('option');
+          option.value = key;
+          option.textContent = value.name;
+          sportTypeSelect.appendChild(option);
+        });
+      }
+      
+      // Fungsi untuk mengisi dropdown sub kategori
+      function populateSubCategories(sportKey) {
+        console.log('Mengisi sub kategori untuk:', sportKey);
+        
+        sportSubCategorySelect.innerHTML = '<option value="">-- Pilih Divisi --</option>';
+        
+        if (sportKey && sportsConfig[sportKey]) {
+          sportsConfig[sportKey].subCategories.forEach(subCat => {
+            const option = document.createElement('option');
+            option.value = subCat;
+            option.textContent = subCat;
+            sportSubCategorySelect.appendChild(option);
+          });
+        }
+      }
+      
+      // Fungsi untuk mengisi dropdown format
+      function populateFormats(sportKey) {
+        console.log('Mengisi format untuk:', sportKey);
+        
+        sportFormatSelect.innerHTML = '<option value="">-- Pilih Format --</option>';
+        
+        if (sportKey && sportsConfig[sportKey]) {
+          sportsConfig[sportKey].formats.forEach(format => {
+            const option = document.createElement('option');
+            option.value = format;
+            option.textContent = format;
+            sportFormatSelect.appendChild(option);
+          });
+        }
+      }
+      
+      // Event listener untuk kategori
+      categorySelect.addEventListener('change', function() {
+        console.log('Kategori dipilih:', this.value);
+        
+        const isSport = this.value === 'sport';
+        toggleSportFields(isSport);
+      });
+      
+      // Event listener untuk cabang olahraga
+      sportTypeSelect.addEventListener('change', function() {
+        console.log('Cabang dipilih:', this.value);
+        
+        populateSubCategories(this.value);
+        populateFormats(this.value);
+      });
+      
+      // Event listener untuk submit form
+      form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Penting! Mencegah form reload halaman
+        console.log('✅ Form disubmit!');
+        
+        // Disable tombol submit
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Menyimpan...';
+        
+        // Kumpulkan data
+        const formData = {
+          eventName: document.getElementById('eventName').value.trim(),
+          eventOrganizer: document.getElementById('eventOrganizer').value.trim(),
+          eventLocation: document.getElementById('eventLocation').value.trim(),
+          eventCategory: categorySelect.value
+        };
+        
+        console.log('Data form:', formData);
+        
+        // Validasi
+        if (!formData.eventName) {
+          showToast('⚠️ Nama event wajib diisi!');
+          submitBtn.disabled = false;
+          submitBtn.textContent = '💾 Simpan & Lanjutkan';
+          return;
+        }
+        
+        if (!formData.eventOrganizer) {
+          showToast('⚠️ Nama penyelenggara wajib diisi!');
+          submitBtn.disabled = false;
+          submitBtn.textContent = '💾 Simpan & Lanjutkan';
+          return;
+        }
+        
+        if (!formData.eventLocation) {
+          showToast('⚠️ Lokasi event wajib diisi!');
+          submitBtn.disabled = false;
+          submitBtn.textContent = '💾 Simpan & Lanjutkan';
+          return;
+        }
+        
+        if (!formData.eventCategory) {
+          showToast('⚠️ Kategori event wajib dipilih!');
+          submitBtn.disabled = false;
+          submitBtn.textContent = '💾 Simpan & Lanjutkan';
+          return;
+        }
+        
+        // Validasi tambahan untuk olahraga
+        if (formData.eventCategory === 'sport') {
+          formData.sportType = sportTypeSelect.value;
+          formData.sportSubCategory = sportSubCategorySelect.value;
+          formData.sportFormat = sportFormatSelect.value;
+          
+          if (!formData.sportType) {
+            showToast('⚠️ Cabang olahraga wajib dipilih!');
+            submitBtn.disabled = false;
+            submitBtn.textContent = '💾 Simpan & Lanjutkan';
+            return;
+          }
+          
+          if (!formData.sportSubCategory) {
+            showToast('⚠️ Divisi/nomor wajib dipilih!');
+            submitBtn.disabled = false;
+            submitBtn.textContent = '💾 Simpan & Lanjutkan';
+            return;
+          }
+          
+          if (!formData.sportFormat) {
+            showToast('⚠️ Format pertandingan wajib dipilih!');
+            submitBtn.disabled = false;
+            submitBtn.textContent = '💾 Simpan & Lanjutkan';
+            return;
+          }
+        }
+        
+        // Simulasi penyimpanan
+        setTimeout(() => {
+          // Buat ringkasan
+          let summary = '✅ EVENT BERHASIL DIBUAT!\n\n';
+          summary += '📝 Nama: ' + formData.eventName + '\n';
+          summary += '👥 Penyelenggara: ' + formData.eventOrganizer + '\n';
+          summary += '📍 Lokasi: ' + formData.eventLocation + '\n';
+          summary += '🏷️ Kategori: ' + (formData.eventCategory === 'sport' ? 'Olahraga' : 'Musik & Konser') + '\n';
+          
+          if (formData.eventCategory === 'sport') {
+            summary += '\n🏆 DETAIL OLAHRAGA:\n';
+            summary += 'Cabang: ' + (sportsConfig[formData.sportType]?.name || formData.sportType) + '\n';
+            summary += 'Divisi: ' + formData.sportSubCategory + '\n';
+            summary += 'Format: ' + formData.sportFormat + '\n';
+          }
+          
+          // Tampilkan ringkasan
+          alert(summary);
+          
+          // Tampilkan toast sukses
+          showToast('🎉 Event berhasil disimpan!');
+          
+          // Reset form
+          form.reset();
+          toggleSportFields(false);
+          
+          // Restore tombol
+          submitBtn.disabled = false;
+          submitBtn.textContent = '💾 Simpan & Lanjutkan';
+          
+          console.log('✅ Form berhasil diproses');
+        }, 1000);
+      });
+      
+      // Inisialisasi
+      console.log('🚀 Inisialisasi form...');
+      toggleSportFields(false);
+    });
+  </script>
+
 </body>
 </html>
