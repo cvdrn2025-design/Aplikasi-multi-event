@@ -4,49 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buat Event Baru</title>
-  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
   <div class="form-card">
     <h2>Form Buat Event</h2>
-    
     <form id="eventForm">
       <div class="form-group">
         <label for="eventName">Nama Event</label>
-        <input type="text" id="eventName" placeholder="Contoh: Turnamen Futsal Samarinda 2026" required>
+        <input type="text" id="eventName" placeholder="Contoh: Turnamen Futsal 2026" required>
       </div>
-
       <div class="form-group">
         <label for="eventOrganizer">Nama Penyelenggara</label>
-        <input type="text" id="eventOrganizer" placeholder="Contoh: Panitia Pelaksana / CV. Dinamika" required>
+        <input type="text" id="eventOrganizer" placeholder="Contoh: Panitia Pelaksana" required>
       </div>
-
       <div class="form-group">
         <label for="eventLocation">Lokasi Event</label>
-        <input type="text" id="eventLocation" placeholder="Contoh: GOR Sempaja, Samarinda" required>
+        <input type="text" id="eventLocation" placeholder="Contoh: GOR Samarinda" required>
       </div>
-
       <div class="form-group">
         <label for="eventCategory">Kategori Event</label>
         <select id="eventCategory" required>
           <option value="">-- Pilih Kategori --</option>
           <option value="sport">Olahraga (Sport)</option>
           <option value="music">Musik & Konser</option>
-          <option value="education">Edukasi & Workshop</option>
         </select>
       </div>
 
+      <!-- Field tersembunyi untuk Olahraga -->
       <div class="form-group hidden" id="sportCompetitionGroup">
         <label for="sportType">Cabang Olahraga</label>
         <select id="sportType"></select>
       </div>
-
       <div class="form-group hidden" id="sportSubCategoryGroup">
         <label for="sportSubCategory">Divisi / Nomor</label>
         <select id="sportSubCategory"></select>
       </div>
-
       <div class="form-group hidden" id="sportFormatGroup">
         <label for="sportFormat">Format Pertandingan</label>
         <select id="sportFormat"></select>
@@ -56,8 +50,7 @@
     </form>
   </div>
 
-  <!-- Pemanggilan Script Modul Menggunakan Relative Path Explicit -->
-  <script type="module" src="./js/main.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
 
