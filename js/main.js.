@@ -1,276 +1,183 @@
-// js/main.js - Versi lengkap dengan UI feedback
+// js/main.js
 import { sportsConfig } from './sportsConfig.js';
 
-class EventForm {
-  constructor() {
-    this.form = document.getElementById('eventForm');
-    this.categorySelect = document.getElementById('eventCategory');
-    this.sportFields = {
-      container: [
-        document.getElementById('sportCompetitionGroup'),
-        document.getElementById('sportSubCategoryGroup'),
-        document.getElementById('sportFormatGroup')
-      ],
-      type: document.getElementById('sportType'),
-      subCategory: document.getElementById('sportSubCategory'),
-      format: document.getElementById('sportFormat')
-    };
-    
-    this.init();
-  }
+console.log('main.js loaded successfully');
+console.log('sportsConfig:', sportsConfig);
+
+// Tunggu DOM siap
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM loaded');
   
-  init() {
-    this.setupEventListeners();
-    this.toggleSportFields(false);
-    console.log('🏟️ Event Form initialized');
-    console.log('📋 Available sports:', Object.keys(sportsConfig));
-  }
+  // Ambil elemen
+  const form = document.getElementById('eventForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const categorySelect = document.getElementById('eventCategory');
+  const sportCompetitionGroup = document.getElementById('sportCompetitionGroup');
+  const sportSubCategoryGroup = document.getElementById('sportSubCategoryGroup');
+  const sportFormatGroup = document.getElementById('sportFormatGroup');
+  const sportTypeSelect = document.getElementById('sportType');
+  const sportSubCategorySelect = document.getElementById('sportSubCategory');
+  const sportFormatSelect = document.getElementById('sportFormat');
   
-  setupEventListeners() {
-    // Kategori event change
-    this.categorySelect.addEventListener('change', (e) => {
-      const isSport = e.target.value === 'sport';
-      this.toggleSportFields(isSport);
-      if (isSport) this.populateSportTypes();
-    });
-    
-    // Cabang olahraga change
-    this.sportFields.type.addEventListener('change', (e) => {
-      this.populateSubCategories(e.target.value);
-      this.populateFormats(e.target.value);
-    });
-    
-    // Form submit
-    this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-    
-    // Real-time validation feedback
-    this.setupRealTimeValidation();
-  }
+  console.log('Elements found:', {
+    form: !!form,
+    submitBtn: !!submitBtn,
+    categorySelect: !!categorySelect,
+    sportTypeSelect: !!sportTypeSelect
+  });
   
-  setupRealTimeValidation() {
-    const inputs = this.form.querySelectorAll('input, select');
-    inputs.forEach(input => {
-      input.addEventListener('blur', () => {
-        if (input.hasAttribute('required') && !input.value.trim()) {
-          input.style.borderColor = '#ff4444';
-          input.style.backgroundColor = '#fff5f5';
-        } else {
-          input.style.borderColor = '#4CAF50';
-          input.style.backgroundColor = '#f0fff0';
-        }
-      });
-      
-      input.addEventListener('focus', () => {
-        input.style.borderColor = '#667eea';
-        input.style.backgroundColor = 'white';
-      });
-    });
-  }
-  
-  toggleSportFields(show) {
-    this.sportFields.container.forEach(field => {
-      field.classList.toggle('hidden', !show);
-    });
-    
-    if (!show) {
-      this.sportFields.type.innerHTML = '<option value="">-- Pilih Cabang Olahraga --</option>';
-      this.sportFields.subCategory.innerHTML = '<option value="">-- Pilih Divisi / Nomor --</option>';
-      this.sportFields.format.innerHTML = '<option value="">-- Pilih Format --</option>';
+  // Fungsi untuk debug
+  function showDebug(message) {
+    console.log('DEBUG:', message);
+    const debugDiv = document.getElementById('debugInfo');
+    if (debugDiv) {
+      debugDiv.style.display = 'block';
+      debugDiv.innerHTML += message + '<br>';
     }
   }
   
-  populateSportTypes() {
-    this.sportFields.type.innerHTML = '<option value="">-- Pilih Cabang Olahraga --</option>';
+  // Toggle field olahraga
+  function toggleSportFields(show) {
+    console.log('toggleSportFields called with:', show);
     
-    Object.entries(sportsConfig).forEach(([key, value]) => {
-      const option = new Option(value.name, key);
-      this.sportFields.type.add(option);
-    });
+    if (show) {
+      sportCompetitionGroup.classList.remove('hidden');
+      sportSubCategoryGroup.classList.remove('hidden');
+      sportFormatGroup.classList.remove('hidden');
+      populateSportTypes();
+    } else {
+      sportCompetitionGroup.classList.add('hidden');
+      sportSubCategoryGroup.classList.add('hidden');
+      sportFormatGroup.classList.add('hidden');
+      // Reset dropdowns
+      sportTypeSelect.innerHTML = '<option value="">-- Pilih Cabang --</option>';
+      sportSubCategorySelect.innerHTML = '<option value="">-- Pilih Divisi --</option>';
+      sportFormatSelect.innerHTML = '<option value="">-- Pilih Format --</option>';
+    }
   }
   
-  populateSubCategories(sportKey) {
-    this.sportFields.subCategory.innerHTML = '<option value="">-- Pilih Divisi / Nomor --</option>';
+  // Populate cabang olahraga
+  function populateSportTypes() {
+    console.log('populateSportTypes called');
+    
+    sportTypeSelect.innerHTML = '<option value="">-- Pilih Cabang --</option>';
+    
+    Object.entries(sportsConfig).forEach(([key, value]) => {
+      const option = document.createElement('option');
+      option.value = key;
+      option.textContent = value.name;
+      sportTypeSelect.appendChild(option);
+    });
+    
+    console.log('Sport types populated:', sportTypeSelect.options.length);
+  }
+  
+  // Populate sub kategori
+  function populateSubCategories(sportKey) {
+    console.log('populateSubCategories called with:', sportKey);
+    
+    sportSubCategorySelect.innerHTML = '<option value="">-- Pilih Divisi --</option>';
     
     if (sportKey && sportsConfig[sportKey]) {
       sportsConfig[sportKey].subCategories.forEach(subCat => {
-        const option = new Option(subCat, subCat);
-        this.sportFields.subCategory.add(option);
+        const option = document.createElement('option');
+        option.value = subCat;
+        option.textContent = subCat;
+        sportSubCategorySelect.appendChild(option);
       });
     }
   }
   
-  populateFormats(sportKey) {
-    this.sportFields.format.innerHTML = '<option value="">-- Pilih Format --</option>';
+  // Populate format
+  function populateFormats(sportKey) {
+    console.log('populateFormats called with:', sportKey);
+    
+    sportFormatSelect.innerHTML = '<option value="">-- Pilih Format --</option>';
     
     if (sportKey && sportsConfig[sportKey]) {
       sportsConfig[sportKey].formats.forEach(format => {
-        const option = new Option(format, format);
-        this.sportFields.format.add(option);
+        const option = document.createElement('option');
+        option.value = format;
+        option.textContent = format;
+        sportFormatSelect.appendChild(option);
       });
     }
   }
   
-  collectFormData() {
-    const data = {
-      eventName: document.getElementById('eventName').value.trim(),
-      eventOrganizer: document.getElementById('eventOrganizer').value.trim(),
-      eventLocation: document.getElementById('eventLocation').value.trim(),
-      eventCategory: this.categorySelect.value,
-      timestamp: new Date().toISOString()
+  // Event listener untuk kategori
+  categorySelect.addEventListener('change', function() {
+    console.log('Category changed to:', this.value);
+    const isSport = this.value === 'sport';
+    toggleSportFields(isSport);
+  });
+  
+  // Event listener untuk cabang olahraga
+  sportTypeSelect.addEventListener('change', function() {
+    console.log('Sport type changed to:', this.value);
+    populateSubCategories(this.value);
+    populateFormats(this.value);
+  });
+  
+  // Event listener untuk form submit
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    console.log('Form submitted!');
+    
+    // Kumpulkan data
+    const formData = {
+      eventName: document.getElementById('eventName').value,
+      eventOrganizer: document.getElementById('eventOrganizer').value,
+      eventLocation: document.getElementById('eventLocation').value,
+      eventCategory: categorySelect.value
     };
     
-    if (data.eventCategory === 'sport') {
-      const sportKey = this.sportFields.type.value;
-      data.sportDetails = {
-        sportKey: sportKey,
-        sportName: sportsConfig[sportKey]?.name || '',
-        subCategory: this.sportFields.subCategory.value,
-        format: this.sportFields.format.value
-      };
+    console.log('Form data:', formData);
+    
+    // Validasi
+    if (!formData.eventName || !formData.eventOrganizer || !formData.eventLocation || !formData.eventCategory) {
+      alert('Mohon lengkapi semua field yang wajib diisi!');
+      return;
     }
     
-    return data;
-  }
+    // Tambahan validasi untuk olahraga
+    if (formData.eventCategory === 'sport') {
+      formData.sportType = sportTypeSelect.value;
+      formData.sportSubCategory = sportSubCategorySelect.value;
+      formData.sportFormat = sportFormatSelect.value;
+      
+      if (!formData.sportType || !formData.sportSubCategory || !formData.sportFormat) {
+        alert('Mohon lengkapi detail olahraga!');
+        return;
+      }
+    }
+    
+    // Tampilkan hasil
+    console.log('Final form data:', formData);
+    
+    let summary = '📋 EVENT BERHASIL DIBUAT\n\n';
+    summary += `Nama Event: ${formData.eventName}\n`;
+    summary += `Penyelenggara: ${formData.eventOrganizer}\n`;
+    summary += `Lokasi: ${formData.eventLocation}\n`;
+    summary += `Kategori: ${formData.eventCategory === 'sport' ? 'Olahraga' : 'Musik & Konser'}\n`;
+    
+    if (formData.eventCategory === 'sport') {
+      summary += `\nDetail Olahraga:\n`;
+      summary += `Cabang: ${sportsConfig[formData.sportType]?.name || formData.sportType}\n`;
+      summary += `Divisi: ${formData.sportSubCategory}\n`;
+      summary += `Format: ${formData.sportFormat}\n`;
+    }
+    
+    alert(summary);
+    
+    // Reset form (opsional)
+    if (confirm('Reset form?')) {
+      form.reset();
+      toggleSportFields(false);
+    }
+  });
   
-  validateForm(data) {
-    const errors = [];
-    
-    if (!data.eventName || data.eventName.length < 3) {
-      errors.push('Nama event minimal 3 karakter');
-    }
-    
-    if (!data.eventOrganizer) {
-      errors.push('Nama penyelenggara wajib diisi');
-    }
-    
-    if (!data.eventLocation) {
-      errors.push('Lokasi event wajib diisi');
-    }
-    
-    if (!data.eventCategory) {
-      errors.push('Kategori event wajib dipilih');
-    }
-    
-    if (data.eventCategory === 'sport') {
-      if (!data.sportDetails?.sportKey) {
-        errors.push('Cabang olahraga wajib dipilih');
-      }
-      if (!data.sportDetails?.subCategory) {
-        errors.push('Divisi/nomor wajib dipilih');
-      }
-      if (!data.sportDetails?.format) {
-        errors.push('Format pertandingan wajib dipilih');
-      }
-    }
-    
-    if (errors.length > 0) {
-      alert('Validasi gagal:\n\n' + errors.join('\n'));
-      return false;
-    }
-    
-    return true;
-  }
-  
-  async handleSubmit(e) {
-    e.preventDefault();
-    
-    const submitBtn = this.form.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    
-    // Disable button dan tampilkan loading
-    submitBtn.disabled = true;
-    submitBtn.textContent = '⏳ Menyimpan...';
-    submitBtn.style.opacity = '0.7';
-    
-    try {
-      const formData = this.collectFormData();
-      
-      if (!this.validateForm(formData)) {
-        throw new Error('Validasi gagal');
-      }
-      
-      // Simulasi API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Tampilkan hasil
-      console.log('✅ Event tersimpan:', formData);
-      
-      // Tampilkan ringkasan
-      const summary = this.generateSummary(formData);
-      alert(summary);
-      
-      // Reset form
-      this.form.reset();
-      this.toggleSportFields(false);
-      
-      // Tampilkan pesan sukses
-      this.showToast('Event berhasil disimpan!', 'success');
-      
-    } catch (error) {
-      console.error('❌ Error:', error);
-      if (error.message !== 'Validasi gagal') {
-        this.showToast('Terjadi kesalahan: ' + error.message, 'error');
-      }
-    } finally {
-      // Restore button
-      submitBtn.disabled = false;
-      submitBtn.textContent = originalText;
-      submitBtn.style.opacity = '1';
-    }
-  }
-  
-  generateSummary(data) {
-    let summary = '📋 RINGKASAN EVENT\n';
-    summary += '━━━━━━━━━━━━━━━━━━━━\n\n';
-    summary += `📌 Nama Event: ${data.eventName}\n`;
-    summary += `👥 Penyelenggara: ${data.eventOrganizer}\n`;
-    summary += `📍 Lokasi: ${data.eventLocation}\n`;
-    summary += `🏷️ Kategori: ${data.eventCategory === 'sport' ? 'Olahraga' : 'Musik & Konser'}\n`;
-    
-    if (data.sportDetails) {
-      summary += `\n🏆 DETAIL OLAHRAGA\n`;
-      summary += `━━━━━━━━━━━━━━━━━━━━\n`;
-      summary += `🎯 Cabang: ${data.sportDetails.sportName}\n`;
-      summary += `👥 Divisi: ${data.sportDetails.subCategory}\n`;
-      summary += `📊 Format: ${data.sportDetails.format}\n`;
-    }
-    
-    summary += `\n⏰ Dibuat: ${new Date(data.timestamp).toLocaleString('id-ID')}\n`;
-    
-    return summary;
-  }
-  
-  showToast(message, type = 'info') {
-    // Buat elemen toast
-    const toast = document.createElement('div');
-    toast.textContent = message;
-    toast.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 15px 20px;
-      border-radius: 8px;
-      color: white;
-      font-weight: 600;
-      z-index: 1000;
-      animation: slideIn 0.3s ease;
-      background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-    `;
-    
-    document.body.appendChild(toast);
-    
-    // Hapus setelah 3 detik
-    setTimeout(() => {
-      toast.style.animation = 'slideOut 0.3s ease';
-      setTimeout(() => toast.remove(), 300);
-    }, 3000);
-  }
-}
-
-// Inisialisasi form
-document.addEventListener('DOMContentLoaded', () => {
-  new EventForm();
+  // Inisialisasi
+  console.log('Initializing form...');
+  toggleSportFields(false);
+  showDebug('Form siap digunakan!');
 });
-
-// Export untuk testing
-export default EventForm;
