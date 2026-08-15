@@ -10,99 +10,66 @@ document.addEventListener('DOMContentLoaded', () => {
   const formatSelect = document.getElementById('sportFormat');
   const eventForm = document.getElementById('eventForm');
 
-  function loadSportsOptions() {
-    if (!sportSelect || !sportsConfig) return;
-    sportSelect.innerHTML = '<option value="">-- Pilih Olahraga --</option>';
-    Object.keys(sportsConfig).forEach(key => {
-      const opt = document.createElement('option');
-      opt.value = key;
-      opt.textContent = sportsConfig[key].name;
-      sportSelect.appendChild(opt);
-    });
-  }
+  categorySelect.addEventListener('change', (e) => {
+    if (e.target.value === 'sport') {
+      sportSelect.innerHTML = '<option value="">-- Pilih Olahraga --</option>';
+      Object.keys(sportsConfig).forEach(key => {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = sportsConfig[key].name;
+        sportSelect.appendChild(opt);
+      });
+      sportGroup.classList.remove('hidden');
+    } else {
+      sportGroup.classList.add('hidden');
+      subCategoryGroup.classList.add('hidden');
+      formatGroup.classList.add('hidden');
+    }
+  });
 
-  if (categorySelect) {
-    categorySelect.addEventListener('change', (e) => {
-      if (e.target.value === 'sport') {
-        loadSportsOptions();
-        if (sportGroup) sportGroup.classList.remove('hidden');
-      } else {
-        resetSportInputs();
-      }
-    });
-  }
+  sportSelect.addEventListener('change', (e) => {
+    const sport = sportsConfig[e.target.value];
+    if (sport) {
+      subCategorySelect.innerHTML = '<option value="">-- Pilih Divisi --</option>';
+      sport.subCategories.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item;
+        opt.textContent = item;
+        subCategorySelect.appendChild(opt);
+      });
+      subCategoryGroup.classList.remove('hidden');
 
-  if (sportSelect) {
-    sportSelect.addEventListener('change', (e) => {
-      const selectedKey = e.target.value;
-      const sport = sportsConfig ? sportsConfig[selectedKey] : null;
+      formatSelect.innerHTML = '<option value="">-- Pilih Format --</option>';
+      sport.formats.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item;
+        opt.textContent = item;
+        formatSelect.appendChild(opt);
+      });
+      formatGroup.classList.remove('hidden');
+    }
+  });
 
-      if (sport) {
-        if (subCategorySelect) {
-          subCategorySelect.innerHTML = '<option value="">-- Pilih Divisi --</option>';
-          sport.subCategories.forEach(item => {
-            const opt = document.createElement('option');
-            opt.value = item;
-            opt.textContent = item;
-            subCategorySelect.appendChild(opt);
-          });
-        }
-        if (subCategoryGroup) subCategoryGroup.classList.remove('hidden');
-
-        if (formatSelect) {
-          formatSelect.innerHTML = '<option value="">-- Pilih Format --</option>';
-          sport.formats.forEach(item => {
-            const opt = document.createElement('option');
-            opt.value = item;
-            opt.textContent = item;
-            formatSelect.appendChild(opt);
-          });
-        }
-        if (formatGroup) formatGroup.classList.remove('hidden');
-      } else {
-        if (subCategoryGroup) subCategoryGroup.classList.add('hidden');
-        if (formatGroup) formatGroup.classList.add('hidden');
-      }
-    });
-  }
-
-  function resetSportInputs() {
-    if (sportGroup) sportGroup.classList.add('hidden');
-    if (subCategoryGroup) subCategoryGroup.classList.add('hidden');
-    if (formatGroup) formatGroup.classList.add('hidden');
-  }
-
-  if (eventForm) {
-    eventForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const category = categorySelect ? categorySelect.value : '';
-      const selectedSport = (sportsConfig && sportSelect && sportsConfig[sportSelect.value]) 
-        ? sportsConfig[sportSelect.value].name 
-        : (sportSelect ? sportSelect.value : '');
-
-      const eventPayload = {
-        eventName: document.getElementById('eventName') ? document.getElementById('eventName').value : '',
-        organizer: document.getElementById('eventOrganizer') ? document.getElementById('eventOrganizer').value : '',
-        location: document.getElementById('eventLocation') ? document.getElementById('eventLocation').value : '',
-        category: category,
-        sportDetails: category === 'sport' ? {
-          type: selectedSport,
-          division: subCategorySelect ? subCategorySelect.value : '',
-          format: formatSelect ? formatSelect.value : ''
-        } : null
-      };
-
-      // Simpan data ke browser
-      localStorage.setItem('activeEvent', JSON.stringify(eventPayload));
-
-      // Pengalihan halaman yang aman untuk GitHub Pages Sub-folder
-      if (category === 'sport') {
-        window.location.href = 'events/sports/bracket.html';
-      } else {
-        alert(`Event "${eventPayload.eventName}" berhasil disimpan!`);
-      }
-    });
-  }
+  eventForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const eventPayload = {
+      eventName: document.getElementById('eventName').value,
+      category: categorySelect.value,
+      sportDetails: categorySelect.value === 'sport' ? {
+        type: sportsConfig[sportSelect.value].name,
+        division: subCategorySelect.value,
+        format: formatSelect.value
+      } : null
+    };
+    
+    localStorage.setItem('activeEvent', JSON.stringify(eventPayload));
+    
+    // Path relatif, tidak perlu garis miring di depan
+    if (categorySelect.value === 'sport') {
+      window.location.href = 'events/sports/bracket.html';
+    } else {
+      alert("Event disimpan!");
+    }
+  });
 });
 
