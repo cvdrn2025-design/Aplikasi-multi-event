@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buat Event Baru</title>
+  <!-- Menghubungkan ke file CSS global -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -12,25 +13,40 @@
     <h2>Form Buat Event</h2>
     
     <form id="eventForm">
-      <!-- 1. Nama Event -->
+      <!-- 1. Input Nama Event -->
       <div class="form-group">
         <label for="eventName">Nama Event</label>
-        <input type="text" id="eventName" placeholder="Contoh: Turnamen Futsal Samarinda 2026" required>
+        <input 
+          type="text" 
+          id="eventName" 
+          placeholder="Contoh: Turnamen Futsal Samarinda 2026" 
+          required
+        >
       </div>
 
-      <!-- 2. Nama Penyelenggara -->
+      <!-- 2. Input Nama Penyelenggara -->
       <div class="form-group">
         <label for="eventOrganizer">Nama Penyelenggara</label>
-        <input type="text" id="eventOrganizer" placeholder="Contoh: Panitia Pelaksana / CV. Dinamika" required>
+        <input 
+          type="text" 
+          id="eventOrganizer" 
+          placeholder="Contoh: Panitia Pelaksana / CV. Dinamika" 
+          required
+        >
       </div>
 
-      <!-- 3. Lokasi Event -->
+      <!-- 3. Input Lokasi Event -->
       <div class="form-group">
         <label for="eventLocation">Lokasi Event</label>
-        <input type="text" id="eventLocation" placeholder="Contoh: GOR Sempaja, Samarinda" required>
+        <input 
+          type="text" 
+          id="eventLocation" 
+          placeholder="Contoh: GOR Sempaja, Samarinda" 
+          required
+        >
       </div>
 
-      <!-- 4. Kategori Event -->
+      <!-- 4. Pilihan Kategori Utama -->
       <div class="form-group">
         <label for="eventCategory">Kategori Event</label>
         <select id="eventCategory" required>
@@ -41,17 +57,19 @@
         </select>
       </div>
 
-      <!-- Input Dinamis Khusus Sport -->
+      <!-- 5. Dynamic Form: Cabang Olahraga (Tersembunyi secara default) -->
       <div class="form-group hidden" id="sportCompetitionGroup">
         <label for="sportType">Cabang Olahraga</label>
         <select id="sportType"></select>
       </div>
 
+      <!-- 6. Dynamic Form: Divisi / Nomor Pertandingan -->
       <div class="form-group hidden" id="sportSubCategoryGroup">
         <label for="sportSubCategory">Divisi / Nomor</label>
         <select id="sportSubCategory"></select>
       </div>
 
+      <!-- 7. Dynamic Form: Format Pertandingan -->
       <div class="form-group hidden" id="sportFormatGroup">
         <label for="sportFormat">Format Pertandingan</label>
         <select id="sportFormat"></select>
@@ -61,7 +79,8 @@
     </form>
   </div>
 
-  <script type="module" src="js/main.js"></script>
+  <!-- Memuat JavaScript utama -->
+  <script src="js/main.js"></script>
 </body>
 </html>
 
