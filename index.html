@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buat Event Baru</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="form-card">
+    <h2>Form Buat Event</h2>
+    
+    <form id="eventForm">
+      <!-- 1. Nama Event -->
+      <div class="form-group">
+        <label for="eventName">Nama Event</label>
+        <input 
+          type="text" 
+          id="eventName" 
+          placeholder="Contoh: Turnamen Futsal Samarinda 2026" 
+          required
+        >
+      </div>
+
+      <!-- 2. Nama Penyelenggara (Baru) -->
+      <div class="form-group">
+        <label for="eventOrganizer">Nama Penyelenggara</label>
+        <input 
+          type="text" 
+          id="eventOrganizer" 
+          placeholder="Contoh: Panitia Pelaksana / CV. Dinamika" 
+          required
+        >
+      </div>
+
+      <!-- 3. Lokasi Event (Baru) -->
+      <div class="form-group">
+        <label for="eventLocation">Lokasi Event</label>
+        <input 
+          type="text" 
+          id="eventLocation" 
+          placeholder="Contoh: GOR Sempaja, Samarinda" 
+          required
+        >
+      </div>
+
+      <!-- 4. Kategori Event -->
+      <div class="form-group">
+        <label for="eventCategory">Kategori Event</label>
+        <select id="eventCategory" required>
+          <option value="">-- Pilih Kategori --</option>
+          <option value="sport">Olahraga (Sport)</option>
+          <option value="music">Musik & Konser</option>
+          <option value="education">Edukasi & Workshop</option>
+        </select>
+      </div>
+
+      <!-- Input Dinamis Khusus Sport -->
+      <div class="form-group hidden" id="sportCompetitionGroup">
+        <label for="sportType">Cabang Olahraga</label>
+        <select id="sportType"></select>
+      </div>
+
+      <div class="form-group hidden" id="sportSubCategoryGroup">
+        <label for="sportSubCategory">Divisi / Nomor</label>
+        <select id="sportSubCategory"></select>
+      </div>
+
+      <div class="form-group hidden" id="sportFormatGroup">
+        <label for="sportFormat">Format Pertandingan</label>
+        <select id="sportFormat"></select>
+      </div>
+
+      <button type="submit" class="btn-submit">Simpan & Lanjutkan</button>
+    </form>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
+
